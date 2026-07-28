@@ -206,6 +206,10 @@ msgid "Average"
 msgstr "Gennemsnitlig"
 
 #: src/components/routes/system/charts/cpu-charts.tsx
+msgid "Average CPU package power consumption"
+msgstr ""
+
+#: src/components/routes/system/charts/cpu-charts.tsx
 msgid "Average CPU utilization of containers"
 msgstr "Gennemsnitlig CPU udnyttelse af containere"
 
@@ -539,6 +543,10 @@ msgstr "CPU-kerner"
 #: src/lib/alerts.ts
 msgid "CPU I/O Wait"
 msgstr "CPU-I/O-ventetid (IOWait)"
+||||||| parent of a7049e93 (feat: add CPU package power monitoring)
+#: src/components/routes/system/charts/cpu-charts.tsx
+msgid "CPU Package Power"
+msgstr ""
 
 #: src/components/systemd-table/systemd-table-columns.tsx
 msgid "CPU Peak"
@@ -547,6 +555,10 @@ msgstr "CPU Peak"
 #: src/lib/alerts.ts
 msgid "CPU Steal Time"
 msgstr "CPU-tid taget af hypervisoren (Steal)"
+
+#: src/components/routes/system/charts/cpu-charts.tsx
+msgid "CPU Power Draw"
+msgstr ""
 
 #: src/components/systemd-table/systemd-table.tsx
 msgid "CPU time"

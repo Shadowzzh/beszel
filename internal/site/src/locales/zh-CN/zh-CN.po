@@ -206,6 +206,10 @@ msgid "Average"
 msgstr "平均"
 
 #: src/components/routes/system/charts/cpu-charts.tsx
+msgid "Average CPU package power consumption"
+msgstr "CPU 封装平均功耗"
+
+#: src/components/routes/system/charts/cpu-charts.tsx
 msgid "Average CPU utilization of containers"
 msgstr "容器的平均 CPU 使用率"
 
@@ -539,14 +543,9 @@ msgstr "CPU 核心"
 #: src/lib/alerts.ts
 msgid "CPU I/O Wait"
 msgstr "CPU I/O 等待时间 (IOWait)"
-
-#: src/components/systemd-table/systemd-table-columns.tsx
-msgid "CPU Peak"
-msgstr "CPU 峰值"
-
-#: src/lib/alerts.ts
-msgid "CPU Steal Time"
-msgstr "CPU 被虚拟机监控程序占用的时间 (Steal)"
+#: src/components/routes/system/charts/cpu-charts.tsx
+msgid "CPU Power Draw"
+msgstr "CPU 功耗"
 
 #: src/components/systemd-table/systemd-table.tsx
 msgid "CPU time"

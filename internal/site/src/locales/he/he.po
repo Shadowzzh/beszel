@@ -206,6 +206,10 @@ msgid "Average"
 msgstr "ממוצע"
 
 #: src/components/routes/system/charts/cpu-charts.tsx
+msgid "Average CPU package power consumption"
+msgstr ""
+
+#: src/components/routes/system/charts/cpu-charts.tsx
 msgid "Average CPU utilization of containers"
 msgstr "ניצול ממוצע של CPU בקונטיינרים"
 
@@ -539,14 +543,9 @@ msgstr "ליבות CPU"
 #: src/lib/alerts.ts
 msgid "CPU I/O Wait"
 msgstr "זמן המתנת קלט/פלט של המעבד (IOWait)"
-
-#: src/components/systemd-table/systemd-table-columns.tsx
-msgid "CPU Peak"
-msgstr "שיא CPU"
-
-#: src/lib/alerts.ts
-msgid "CPU Steal Time"
-msgstr "זמן מעבד גנוב (Steal)"
+#: src/components/routes/system/charts/cpu-charts.tsx
+msgid "CPU Power Draw"
+msgstr ""
 
 #: src/components/systemd-table/systemd-table.tsx
 msgid "CPU time"

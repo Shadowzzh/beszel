@@ -198,12 +198,17 @@ func AverageSystemStatsSlice(records []system.Stats) system.Stats {
 	var fanSums map[string]uint64
 	fanCount := uint64(0)
 	zfsPoolCounts := make(map[string]uint64)
+	cpuPowerCount := float64(0)
 
 	// Accumulate totals
 	for i := range records {
 		stats := &records[i]
 
 		sum.Cpu += stats.Cpu
+		if stats.CpuPower > 0 {
+			sum.CpuPower += stats.CpuPower
+			cpuPowerCount++
+		}
 		// accumulate cpu time breakdowns if present
 		if stats.CpuBreakdown != nil {
 			if len(cpuBreakdownSums) < len(stats.CpuBreakdown) {
@@ -259,6 +264,7 @@ func AverageSystemStatsSlice(records []system.Stats) system.Stats {
 		}
 		// Set peak values
 		sum.MaxCpu = max(sum.MaxCpu, stats.MaxCpu, stats.Cpu)
+		sum.MaxCpuPower = max(sum.MaxCpuPower, stats.MaxCpuPower, stats.CpuPower)
 		sum.MaxMem = max(sum.MaxMem, stats.MaxMem, stats.MemUsed)
 		sum.MaxNetworkSent = max(sum.MaxNetworkSent, stats.MaxNetworkSent, stats.NetworkSent)
 		sum.MaxNetworkRecv = max(sum.MaxNetworkRecv, stats.MaxNetworkRecv, stats.NetworkRecv)
@@ -396,6 +402,9 @@ func AverageSystemStatsSlice(records []system.Stats) system.Stats {
 
 	// Compute averages
 	sum.Cpu = twoDecimals(sum.Cpu / count)
+	if cpuPowerCount > 0 {
+		sum.CpuPower = twoDecimals(sum.CpuPower / cpuPowerCount)
+	}
 	sum.Mem = twoDecimals(sum.Mem / count)
 	sum.MemUsed = twoDecimals(sum.MemUsed / count)
 	sum.MemPct = twoDecimals(sum.MemPct / count)

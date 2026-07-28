@@ -1,5 +1,6 @@
 import { t } from "@lingui/core/macro"
 import AreaChartDefault from "@/components/charts/area-chart"
+import LineChartDefault from "@/components/charts/line-chart"
 import { useContainerDataPoints } from "@/components/charts/hooks"
 import { decimalString, toFixedFloat } from "@/lib/utils"
 import type { ChartConfig } from "@/components/ui/chart"
@@ -53,6 +54,48 @@ export function CpuChart({
 				tickFormatter={(val) => `${toFixedFloat(val, 2)}%`}
 				contentFormatter={({ value }) => `${decimalString(value)}%`}
 				domain={pinnedAxisDomain()}
+			/>
+		</ChartCard>
+	)
+}
+
+export function CpuPowerChart({
+	chartData,
+	grid,
+	dataEmpty,
+	showMax,
+	isLongerChart,
+	maxValues,
+}: {
+	chartData: ChartData
+	grid: boolean
+	dataEmpty: boolean
+	showMax: boolean
+	isLongerChart: boolean
+	maxValues: boolean
+}) {
+	const maxValSelect = isLongerChart ? <SelectAvgMax max={maxValues} /> : null
+
+	return (
+		<ChartCard
+			empty={dataEmpty}
+			grid={grid}
+			title={t`CPU Power Draw`}
+			description={t`Average CPU package power consumption`}
+			cornerEl={maxValSelect}
+		>
+			<LineChartDefault
+				chartData={chartData}
+				maxToggled={showMax}
+				dataPoints={[
+					{
+						label: t`CPU Package Power`,
+						dataKey: ({ stats }) => (showMax ? stats?.pwm : stats?.pw),
+						color: 2,
+					},
+				]}
+				tickFormatter={(val) => `${toFixedFloat(val, 2)}W`}
+				contentFormatter={({ value }) => `${decimalString(value)}W`}
 			/>
 		</ChartCard>
 	)

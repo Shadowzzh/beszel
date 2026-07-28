@@ -206,6 +206,10 @@ msgid "Average"
 msgstr "Rata-rata"
 
 #: src/components/routes/system/charts/cpu-charts.tsx
+msgid "Average CPU package power consumption"
+msgstr ""
+
+#: src/components/routes/system/charts/cpu-charts.tsx
 msgid "Average CPU utilization of containers"
 msgstr "Rata-rata utilisasi CPU untuk semua kontainer"
 
@@ -539,14 +543,9 @@ msgstr "Inti CPU"
 #: src/lib/alerts.ts
 msgid "CPU I/O Wait"
 msgstr "Waktu tunggu I/O CPU (IOWait)"
-
-#: src/components/systemd-table/systemd-table-columns.tsx
-msgid "CPU Peak"
-msgstr "Puncak CPU"
-
-#: src/lib/alerts.ts
-msgid "CPU Steal Time"
-msgstr "Waktu CPU yang diambil hypervisor (Steal)"
+#: src/components/routes/system/charts/cpu-charts.tsx
+msgid "CPU Power Draw"
+msgstr ""
 
 #: src/components/systemd-table/systemd-table.tsx
 msgid "CPU time"

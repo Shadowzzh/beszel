@@ -206,6 +206,10 @@ msgid "Average"
 msgstr "평균"
 
 #: src/components/routes/system/charts/cpu-charts.tsx
+msgid "Average CPU package power consumption"
+msgstr ""
+
+#: src/components/routes/system/charts/cpu-charts.tsx
 msgid "Average CPU utilization of containers"
 msgstr "Docker 컨테이너의 평균 CPU 사용량"
 
@@ -539,14 +543,9 @@ msgstr "CPU 코어"
 #: src/lib/alerts.ts
 msgid "CPU I/O Wait"
 msgstr "CPU I/O 대기 시간 (IOWait)"
-
-#: src/components/systemd-table/systemd-table-columns.tsx
-msgid "CPU Peak"
-msgstr "CPU 최대값"
-
-#: src/lib/alerts.ts
-msgid "CPU Steal Time"
-msgstr "CPU 스틸 시간 (Steal)"
+#: src/components/routes/system/charts/cpu-charts.tsx
+msgid "CPU Power Draw"
+msgstr ""
 
 #: src/components/systemd-table/systemd-table.tsx
 msgid "CPU time"

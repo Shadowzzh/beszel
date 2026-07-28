@@ -5,7 +5,7 @@ import type { GPUData } from "@/types"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import InfoBar from "./system/info-bar"
 import { useSystemData } from "./system/use-system-data"
-import { CpuChart, ContainerCpuChart } from "./system/charts/cpu-charts"
+import { CpuChart, CpuPowerChart, ContainerCpuChart } from "./system/charts/cpu-charts"
 import { MemoryChart, ContainerMemoryChart, SwapChart } from "./system/charts/memory-charts"
 import { RootDiskCharts, ExtraFsCharts } from "./system/charts/disk-charts"
 import { ZfsCharts } from "./system/charts/zfs-charts"
@@ -49,6 +49,7 @@ export default memo(function SystemDetail({ id }: { id: string }) {
 		hasGpuData,
 		hasGpuEnginesData,
 		hasGpuPowerData,
+		hasCpuPowerData,
 	} = systemData
 
 	// extra margin to add to bottom of page, specifically for temperature chart,
@@ -82,6 +83,8 @@ export default memo(function SystemDetail({ id }: { id: string }) {
 				{/* main charts */}
 				<div className="grid xl:grid-cols-2 gap-4">
 					<CpuChart {...coreProps} />
+
+					{hasCpuPowerData && <CpuPowerChart {...coreProps} />}
 
 					{hasContainers && (
 						<ContainerCpuChart
@@ -192,6 +195,7 @@ export default memo(function SystemDetail({ id }: { id: string }) {
 				<TabsContent value="core" forceMount className={activeTab === "core" ? "contents" : "hidden"}>
 					<div className="grid xl:grid-cols-2 gap-4">
 						<CpuChart {...coreProps} />
+						{hasCpuPowerData && <CpuPowerChart {...coreProps} />}
 						<MemoryChart {...coreProps} />
 						<LoadAverageChart chartData={chartData} grid={grid} dataEmpty={dataEmpty} />
 						<BandwidthChart {...coreProps} systemStats={systemStats} />

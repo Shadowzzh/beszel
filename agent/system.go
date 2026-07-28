@@ -167,6 +167,11 @@ func (a *Agent) getSystemStats(cacheTimeMs uint16) system.Stats {
 	} else {
 		slog.Error("Error getting cpu metrics", "err", err)
 	}
+	if a.cpuPowerMonitor != nil {
+		if watts, ok := a.cpuPowerMonitor.getWatts(cacheTimeMs); ok {
+			systemStats.CpuPower = watts
+		}
+	}
 
 	// per-core cpu usage
 	if perCoreUsage, err := getPerCoreCpuUsage(cacheTimeMs); err == nil {

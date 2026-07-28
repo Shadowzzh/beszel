@@ -3,6 +3,8 @@
 package records
 
 import (
+	"github.com/henrygd/beszel/internal/entities/system"
+	"github.com/pocketbase/dbx"
 	"github.com/pocketbase/pocketbase/core"
 )
 
@@ -19,4 +21,13 @@ func DeleteOldAlertsHistory(app core.App, countToKeep, countBeforeDeletion int) 
 // TwoDecimals exposes twoDecimals for testing
 func TwoDecimals(value float64) float64 {
 	return twoDecimals(value)
+}
+
+// AverageSystemStatsForTest 让外部测试包验证历史聚合结果。
+func AverageSystemStatsForTest(rm *RecordManager, db dbx.Builder, ids []string) *system.Stats {
+	recordIds := make(RecordIds, len(ids))
+	for i, id := range ids {
+		recordIds[i].Id = id
+	}
+	return rm.AverageSystemStats(db, recordIds)
 }

@@ -206,6 +206,10 @@ msgid "Average"
 msgstr "Genomsnitt"
 
 #: src/components/routes/system/charts/cpu-charts.tsx
+msgid "Average CPU package power consumption"
+msgstr ""
+
+#: src/components/routes/system/charts/cpu-charts.tsx
 msgid "Average CPU utilization of containers"
 msgstr "Genomsnittlig CPU-användning för containrar"
 
@@ -539,14 +543,9 @@ msgstr "CPU-kärnor"
 #: src/lib/alerts.ts
 msgid "CPU I/O Wait"
 msgstr "CPU I/O-väntetid (IOWait)"
-
-#: src/components/systemd-table/systemd-table-columns.tsx
-msgid "CPU Peak"
-msgstr "CPU-topp"
-
-#: src/lib/alerts.ts
-msgid "CPU Steal Time"
-msgstr "CPU-tid tagen av hypervisorn (Steal)"
+#: src/components/routes/system/charts/cpu-charts.tsx
+msgid "CPU Power Draw"
+msgstr ""
 
 #: src/components/systemd-table/systemd-table.tsx
 msgid "CPU time"

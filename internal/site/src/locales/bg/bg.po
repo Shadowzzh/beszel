@@ -206,6 +206,10 @@ msgid "Average"
 msgstr "Средно"
 
 #: src/components/routes/system/charts/cpu-charts.tsx
+msgid "Average CPU package power consumption"
+msgstr ""
+
+#: src/components/routes/system/charts/cpu-charts.tsx
 msgid "Average CPU utilization of containers"
 msgstr "Средно използване на процесора на контейнерите"
 
@@ -539,14 +543,9 @@ msgstr "CPU ядра"
 #: src/lib/alerts.ts
 msgid "CPU I/O Wait"
 msgstr "Изчакване на CPU за вход/изход (IOWait)"
-
-#: src/components/systemd-table/systemd-table-columns.tsx
-msgid "CPU Peak"
-msgstr "Пик на CPU"
-
-#: src/lib/alerts.ts
-msgid "CPU Steal Time"
-msgstr "Отнето време на CPU (Steal)"
+#: src/components/routes/system/charts/cpu-charts.tsx
+msgid "CPU Power Draw"
+msgstr ""
 
 #: src/components/systemd-table/systemd-table.tsx
 msgid "CPU time"

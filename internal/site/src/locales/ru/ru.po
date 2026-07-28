@@ -206,6 +206,10 @@ msgid "Average"
 msgstr "Среднее"
 
 #: src/components/routes/system/charts/cpu-charts.tsx
+msgid "Average CPU package power consumption"
+msgstr ""
+
+#: src/components/routes/system/charts/cpu-charts.tsx
 msgid "Average CPU utilization of containers"
 msgstr "Среднее использование CPU контейнерами"
 
@@ -540,6 +544,10 @@ msgstr "Ядра CPU"
 msgid "CPU I/O Wait"
 msgstr "Ожидание ввода-вывода CPU (IOWait)"
 
+#: src/components/routes/system/charts/cpu-charts.tsx
+msgid "CPU Package Power"
+msgstr ""
+
 #: src/components/systemd-table/systemd-table-columns.tsx
 msgid "CPU Peak"
 msgstr "Пик CPU"
@@ -547,6 +555,10 @@ msgstr "Пик CPU"
 #: src/lib/alerts.ts
 msgid "CPU Steal Time"
 msgstr "Недоступное время CPU (Steal)"
+||||||| parent of a7049e93 (feat: add CPU package power monitoring)
+#: src/components/routes/system/charts/cpu-charts.tsx
+msgid "CPU Power Draw"
+msgstr ""
 
 #: src/components/systemd-table/systemd-table.tsx
 msgid "CPU time"

@@ -40,6 +40,7 @@ type Agent struct {
 	systemDetails             system.Details                                        // Host system details (static, once-per-connection)
 	detailsDirty              bool                                                  // Whether system details have changed and need to be resent
 	gpuManager                *GPUManager                                           // Manages GPU data
+	cpuPowerMonitor           *cpuPowerMonitor                                      // 从 Linux powercap 采集 CPU 封装功耗
 	cache                     *systemDataCache                                      // Cache for system stats based on cache time
 	connectionManager         *ConnectionManager                                    // Channel to signal connection events
 	handlerRegistry           *HandlerRegistry                                      // Registry for routing incoming messages
@@ -155,6 +156,13 @@ func NewAgent(dataDir ...string) (agent *Agent, err error) {
 	agent.gpuManager, err = NewGPUManager()
 	if err != nil {
 		slog.Debug("GPU", "err", err)
+	}
+
+	// 初始化 CPU 封装功耗采集器；不支持 RAPL 的主机继续正常运行。
+	if monitor, powerErr := newCpuPowerMonitor(defaultPowercapRoot, time.Now); powerErr == nil {
+		agent.cpuPowerMonitor = monitor
+	} else {
+		slog.Debug("CPU power", "err", powerErr)
 	}
 
 	// if debugging, print stats

@@ -206,6 +206,10 @@ msgid "Average"
 msgstr "Átlag"
 
 #: src/components/routes/system/charts/cpu-charts.tsx
+msgid "Average CPU package power consumption"
+msgstr ""
+
+#: src/components/routes/system/charts/cpu-charts.tsx
 msgid "Average CPU utilization of containers"
 msgstr "Konténerek átlagos CPU kihasználtsága"
 
@@ -539,14 +543,9 @@ msgstr "CPU magok"
 #: src/lib/alerts.ts
 msgid "CPU I/O Wait"
 msgstr "CPU I/O-várakozási idő (IOWait)"
-
-#: src/components/systemd-table/systemd-table-columns.tsx
-msgid "CPU Peak"
-msgstr "CPU csúcs"
-
-#: src/lib/alerts.ts
-msgid "CPU Steal Time"
-msgstr "A hipervizor által elvett CPU-idő (Steal)"
+#: src/components/routes/system/charts/cpu-charts.tsx
+msgid "CPU Power Draw"
+msgstr ""
 
 #: src/components/systemd-table/systemd-table.tsx
 msgid "CPU time"

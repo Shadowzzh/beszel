@@ -206,6 +206,10 @@ msgid "Average"
 msgstr "Povprečno"
 
 #: src/components/routes/system/charts/cpu-charts.tsx
+msgid "Average CPU package power consumption"
+msgstr ""
+
+#: src/components/routes/system/charts/cpu-charts.tsx
 msgid "Average CPU utilization of containers"
 msgstr "Povprečna izkoriščenost procesorja kontejnerjev"
 
@@ -539,14 +543,9 @@ msgstr "CPU jedra"
 #: src/lib/alerts.ts
 msgid "CPU I/O Wait"
 msgstr "Čakanje CPU na V/I (IOWait)"
-
-#: src/components/systemd-table/systemd-table-columns.tsx
-msgid "CPU Peak"
-msgstr "Vrhunec CPU"
-
-#: src/lib/alerts.ts
-msgid "CPU Steal Time"
-msgstr "Čas CPU, ki ga odvzame hipervizor (Steal)"
+#: src/components/routes/system/charts/cpu-charts.tsx
+msgid "CPU Power Draw"
+msgstr ""
 
 #: src/components/systemd-table/systemd-table.tsx
 msgid "CPU time"
