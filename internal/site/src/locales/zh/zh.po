@@ -196,6 +196,10 @@ msgid "Average"
 msgstr "平均"
 
 #: src/components/routes/system/charts/cpu-charts.tsx
+msgid "Average CPU package power consumption"
+msgstr "CPU 封裝平均功耗"
+
+#: src/components/routes/system/charts/cpu-charts.tsx
 msgid "Average CPU utilization of containers"
 msgstr "容器的平均 CPU 使用率"
 
@@ -502,9 +506,17 @@ msgstr ""
 msgid "CPU Cores"
 msgstr "CPU 核心"
 
+#: src/components/routes/system/charts/cpu-charts.tsx
+msgid "CPU Package Power"
+msgstr "CPU 封裝功耗"
+
 #: src/components/systemd-table/systemd-table-columns.tsx
 msgid "CPU Peak"
 msgstr "CPU 峰值"
+
+#: src/components/routes/system/charts/cpu-charts.tsx
+msgid "CPU Power Draw"
+msgstr "CPU 功耗"
 
 #: src/components/systemd-table/systemd-table.tsx
 msgid "CPU time"

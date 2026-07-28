@@ -13,6 +13,8 @@ import (
 type Stats struct {
 	Cpu            float64             `json:"cpu" cbor:"0,keyasint"`
 	MaxCpu         float64             `json:"cpum,omitempty" cbor:"-"`
+	CpuPower       float64             `json:"pw,omitempty" cbor:"36,keyasint,omitempty"`
+	MaxCpuPower    float64             `json:"pwm,omitempty" cbor:"-"`
 	Mem            float64             `json:"m" cbor:"2,keyasint"`
 	MaxMem         float64             `json:"mm,omitempty" cbor:"-"`
 	MemUsed        float64             `json:"mu" cbor:"3,keyasint"`

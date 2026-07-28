@@ -84,6 +84,10 @@ export interface SystemStats {
 	cpu: number
 	/** peak cpu */
 	cpum?: number
+	/** CPU 封装功耗（W） */
+	pw?: number
+	/** CPU 封装峰值功耗（W） */
+	pwm?: number
 	/** cpu breakdown [user, system, iowait, steal, idle] (0-100 integers) */
 	cpub?: number[]
 	/** per-core cpu usage [CPU0..] (0-100 integers) */

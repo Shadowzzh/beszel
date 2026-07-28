@@ -184,6 +184,7 @@ func (rm *RecordManager) AverageSystemStats(db dbx.Builder, records RecordIds) *
 
 	count := float64(len(records))
 	tempCount := float64(0)
+	cpuPowerCount := float64(0)
 
 	// Accumulate totals
 	for _, record := range records {
@@ -200,6 +201,10 @@ func (rm *RecordManager) AverageSystemStats(db dbx.Builder, records RecordIds) *
 		}
 
 		sum.Cpu += stats.Cpu
+		if stats.CpuPower > 0 {
+			sum.CpuPower += stats.CpuPower
+			cpuPowerCount++
+		}
 		// accumulate cpu time breakdowns if present
 		if stats.CpuBreakdown != nil {
 			if len(cpuBreakdownSums) < len(stats.CpuBreakdown) {
@@ -248,6 +253,7 @@ func (rm *RecordManager) AverageSystemStats(db dbx.Builder, records RecordIds) *
 		}
 		// Set peak values
 		sum.MaxCpu = max(sum.MaxCpu, stats.MaxCpu, stats.Cpu)
+		sum.MaxCpuPower = max(sum.MaxCpuPower, stats.MaxCpuPower, stats.CpuPower)
 		sum.MaxMem = max(sum.MaxMem, stats.MaxMem, stats.MemUsed)
 		sum.MaxNetworkSent = max(sum.MaxNetworkSent, stats.MaxNetworkSent, stats.NetworkSent)
 		sum.MaxNetworkRecv = max(sum.MaxNetworkRecv, stats.MaxNetworkRecv, stats.NetworkRecv)
@@ -346,6 +352,9 @@ func (rm *RecordManager) AverageSystemStats(db dbx.Builder, records RecordIds) *
 	// Compute averages in place
 	if count > 0 {
 		sum.Cpu = twoDecimals(sum.Cpu / count)
+		if cpuPowerCount > 0 {
+			sum.CpuPower = twoDecimals(sum.CpuPower / cpuPowerCount)
+		}
 		sum.Mem = twoDecimals(sum.Mem / count)
 		sum.MemUsed = twoDecimals(sum.MemUsed / count)
 		sum.MemPct = twoDecimals(sum.MemPct / count)

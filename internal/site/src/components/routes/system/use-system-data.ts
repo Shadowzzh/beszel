@@ -296,6 +296,7 @@ export function useSystemData(id: string) {
 	const dataEmpty = !chartLoading && chartData.systemStats.length === 0
 	const lastGpus = systemStats.at(-1)?.stats?.g
 	const isPodman = details?.podman ?? system.info?.p ?? false
+	const hasCpuPowerData = systemStats.some(({ stats }) => stats?.pw !== undefined)
 
 	let hasGpuData = false
 	let hasGpuEnginesData = false
@@ -342,5 +343,6 @@ export function useSystemData(id: string) {
 		hasGpuData,
 		hasGpuEnginesData,
 		hasGpuPowerData,
+		hasCpuPowerData,
 	}
 }
