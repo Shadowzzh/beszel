@@ -72,6 +72,10 @@ msgid "1 week"
 msgstr "1 settimana"
 
 #: src/lib/utils.ts
+msgid "10 minutes"
+msgstr ""
+
+#: src/lib/utils.ts
 msgid "12 hours"
 msgstr "12 ore"
 
@@ -87,6 +91,10 @@ msgstr "24 ore"
 #: src/lib/utils.ts
 msgid "30 days"
 msgstr "30 giorni"
+
+#: src/lib/utils.ts
+msgid "30 minutes"
+msgstr ""
 
 #. Load average
 #: src/components/routes/system/charts/load-average-chart.tsx
