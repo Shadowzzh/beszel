@@ -68,6 +68,10 @@ msgid "1 week"
 msgstr "1週間"
 
 #: src/lib/utils.ts
+msgid "10 minutes"
+msgstr ""
+
+#: src/lib/utils.ts
 msgid "12 hours"
 msgstr "12時間"
 
@@ -83,6 +87,10 @@ msgstr "24時間"
 #: src/lib/utils.ts
 msgid "30 days"
 msgstr "30日間"
+
+#: src/lib/utils.ts
+msgid "30 minutes"
+msgstr ""
 
 #. Load average
 #: src/components/routes/system/charts/load-average-chart.tsx

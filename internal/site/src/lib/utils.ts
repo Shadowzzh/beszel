@@ -135,6 +135,20 @@ export const chartTimeData: ChartTimeData = {
 		getOffset: (endTime: Date) => timeMinute.offset(endTime, -1),
 		minVersion: "0.13.0",
 	},
+	"10m": {
+		type: "1m",
+		expectedInterval: 60_000,
+		label: () => t`10 minutes`,
+		format: (timestamp: string) => hourWithMinutes(timestamp),
+		getOffset: (endTime: Date) => timeMinute.offset(endTime, -10),
+	},
+	"30m": {
+		type: "1m",
+		expectedInterval: 60_000,
+		label: () => t`30 minutes`,
+		format: (timestamp: string) => hourWithMinutes(timestamp),
+		getOffset: (endTime: Date) => timeMinute.offset(endTime, -30),
+	},
 	"1h": {
 		type: "1m",
 		expectedInterval: 60_000,
