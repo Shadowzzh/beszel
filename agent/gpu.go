@@ -47,7 +47,28 @@ type GPUManager struct {
 	lastAvgData map[string]system.GPUData
 	// Per-cache-key tracking for delta calculations
 	// cacheKey -> gpuId -> snapshot of last count/usage/power values
-	lastSnapshots map[uint16]map[string]*gpuSnapshot
+	lastSnapshots     map[uint16]map[string]*gpuSnapshot
+	appleMetrics      appleSystemMetrics
+	appleSnapshots    map[uint16]appleSystemSnapshot
+	appleLastCpuPower map[uint16]float64
+}
+
+type appleSystemMetrics struct {
+	count          uint64
+	cpuPower       float64
+	cpuTemperature float64
+	fans           map[string]float64
+}
+
+type appleSystemSnapshot struct {
+	count    uint64
+	cpuPower float64
+}
+
+type appleSystemStats struct {
+	cpuPower       float64
+	cpuTemperature float64
+	fans           map[string]float64
 }
 
 // gpuSnapshot stores the last observed incremental values for delta tracking
@@ -323,6 +344,45 @@ func (gm *GPUManager) GetCurrentData(cacheKey uint16) map[string]system.GPUData 
 	}
 	slog.Debug("GPU", "data", gpuData)
 	return gpuData
+}
+
+func (gm *GPUManager) getAppleSystemStats(cacheKey uint16) appleSystemStats {
+	gm.Lock()
+	defer gm.Unlock()
+
+	metrics := gm.appleMetrics
+	if metrics.count == 0 {
+		return appleSystemStats{}
+	}
+	if gm.appleSnapshots == nil {
+		gm.appleSnapshots = make(map[uint16]appleSystemSnapshot)
+	}
+	if gm.appleLastCpuPower == nil {
+		gm.appleLastCpuPower = make(map[uint16]float64)
+	}
+
+	previous, hasPrevious := gm.appleSnapshots[cacheKey]
+	deltaCount := metrics.count
+	deltaPower := metrics.cpuPower
+	if hasPrevious && metrics.count >= previous.count {
+		deltaCount = metrics.count - previous.count
+		deltaPower = metrics.cpuPower - previous.cpuPower
+	}
+
+	cpuPower := gm.appleLastCpuPower[cacheKey]
+	if deltaCount > 0 {
+		cpuPower = utils.TwoDecimals(deltaPower / float64(deltaCount))
+		gm.appleLastCpuPower[cacheKey] = cpuPower
+	}
+	gm.appleSnapshots[cacheKey] = appleSystemSnapshot{count: metrics.count, cpuPower: metrics.cpuPower}
+
+	fans := make(map[string]float64, len(metrics.fans))
+	maps.Copy(fans, metrics.fans)
+	return appleSystemStats{
+		cpuPower:       cpuPower,
+		cpuTemperature: metrics.cpuTemperature,
+		fans:           fans,
+	}
 }
 
 // initializeSnapshots ensures snapshot maps are initialized for the given cache key

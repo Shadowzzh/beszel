@@ -146,6 +146,10 @@ export interface SystemStats {
 	bm?: [number, number]
 	/** temperatures */
 	t?: Record<string, number>
+	/** 风扇转速（RPM） */
+	f?: Record<string, number>
+	/** 风扇峰值转速（RPM） */
+	fm?: Record<string, number>
 	/** extra filesystems */
 	efs?: Record<string, ExtraFsStats>
 	/** GPU data */

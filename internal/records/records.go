@@ -181,6 +181,7 @@ func (rm *RecordManager) AverageSystemStats(db dbx.Builder, records RecordIds) *
 	var cpuCoresSums []uint64
 	// accumulate cpu breakdown [user, system, iowait, steal, idle]
 	var cpuBreakdownSums []float64
+	fanCounts := make(map[string]float64)
 
 	count := float64(len(records))
 	tempCount := float64(0)
@@ -291,6 +292,19 @@ func (rm *RecordManager) AverageSystemStats(db dbx.Builder, records RecordIds) *
 			}
 		}
 
+		// 累计风扇转速，并为长周期记录保留峰值
+		if stats.Fans != nil {
+			if sum.Fans == nil {
+				sum.Fans = make(map[string]float64, len(stats.Fans))
+				sum.MaxFans = make(map[string]float64, len(stats.Fans))
+			}
+			for key, value := range stats.Fans {
+				sum.Fans[key] += value
+				fanCounts[key]++
+				sum.MaxFans[key] = max(sum.MaxFans[key], stats.MaxFans[key], value)
+			}
+		}
+
 		// Accumulate extra filesystem stats
 		if stats.ExtraFs != nil {
 			if sum.ExtraFs == nil {
@@ -398,6 +412,11 @@ func (rm *RecordManager) AverageSystemStats(db dbx.Builder, records RecordIds) *
 			for key := range sum.Temperatures {
 				sum.Temperatures[key] = twoDecimals(sum.Temperatures[key] / tempCount)
 			}
+		}
+
+		// 按传感器分别计算平均值，避免间歇缺失的传感器被低估
+		for key, fanCount := range fanCounts {
+			sum.Fans[key] = twoDecimals(sum.Fans[key] / fanCount)
 		}
 
 		// Average extra filesystem stats

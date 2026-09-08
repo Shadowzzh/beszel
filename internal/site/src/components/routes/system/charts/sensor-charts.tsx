@@ -4,10 +4,80 @@ import { batteryStateTranslations } from "@/lib/i18n"
 import { $temperatureFilter, $userSettings } from "@/lib/stores"
 import { cn, decimalString, formatTemperature, toFixedFloat } from "@/lib/utils"
 import type { ChartData, SystemStatsRecord } from "@/types"
-import { ChartCard, FilterBar } from "../chart-card"
+import { ChartCard, FilterBar, SelectAvgMax } from "../chart-card"
 import LineChartDefault from "@/components/charts/line-chart"
 import { useStore } from "@nanostores/react"
 import { useRef, useMemo, useState, useEffect } from "react"
+
+const sensorDisplayNames: Record<string, string> = {
+	"AMD GPU (13c0)": "核显温度",
+	"Apple GPU": "GPU 温度",
+	"NAND CH0 temp": "SSD 温度",
+	amdgpu_edge: "核显边缘温度",
+	it8613: "主板温度 1",
+	it8613_5: "主板温度 2",
+	it8613_6: "主板温度 3",
+	k10temp_tccd1: "CPU 核心温度",
+	k10temp_tctl: "CPU 温度",
+	macmon_cpu: "CPU 温度",
+	"r8169_0_400:00": "有线网卡温度",
+	nvme_composite: "SSD 综合温度",
+	nvme_sensor_1: "SSD 传感器 1",
+	nvme_sensor_2: "SSD 传感器 2",
+	spd5118: "内存温度 1",
+	spd5118_11: "内存温度 2",
+}
+
+function getSensorDisplayName(sensorName: string) {
+	return sensorDisplayNames[sensorName] ?? sensorName
+}
+
+const fanDisplayNames: Record<string, string> = {
+	it8613_fan2: "风扇 2",
+	it8613_fan3: "涡轮风扇",
+	macmon_fan0: "系统风扇",
+}
+
+export function FanSpeedChart({
+	chartData,
+	grid,
+	dataEmpty,
+	showMax,
+	isLongerChart,
+	maxValues,
+}: {
+	chartData: ChartData
+	grid: boolean
+	dataEmpty: boolean
+	showMax: boolean
+	isLongerChart: boolean
+	maxValues: boolean
+}) {
+	const fanNames = Array.from(new Set(chartData.systemStats.flatMap(({ stats }) => Object.keys(stats?.f ?? {})))).sort()
+
+	if (fanNames.length === 0) {
+		return null
+	}
+
+	const maxValSelect = isLongerChart ? <SelectAvgMax max={maxValues} /> : null
+	const dataPoints = fanNames.map((fanName, index) => ({
+		label: fanDisplayNames[fanName] ?? fanName,
+		dataKey: ({ stats }: SystemStatsRecord) => (showMax ? stats?.fm?.[fanName] : stats?.f?.[fanName]),
+		color: index + 1,
+	}))
+
+	return (
+		<ChartCard empty={dataEmpty} grid={grid} title="风扇转速" description="硬件风扇转速" cornerEl={maxValSelect}>
+			<LineChartDefault
+				chartData={chartData}
+				maxToggled={showMax}
+				dataPoints={dataPoints}
+				tickFormatter={(val) => `${toFixedFloat(val, 0)} RPM`}
+				contentFormatter={({ value }) => `${decimalString(value)} RPM`}
+			/>
+		</ChartCard>
+	)
+}
 
 export function BatteryChart({
 	chartData,
@@ -108,16 +178,18 @@ export function TemperatureChart({
 
 	const dataPoints = useMemo(() => {
 		return sortedKeys.map((key) => {
+			const displayName = getSensorDisplayName(key)
 			const filterTerms = filter
 				? filter
 						.toLowerCase()
 						.split(" ")
 						.filter((term) => term.length > 0)
 				: []
-			const filtered = filterTerms.length > 0 && !filterTerms.some((term) => key.toLowerCase().includes(term))
+			const searchableName = `${displayName} ${key}`.toLowerCase()
+			const filtered = filterTerms.length > 0 && !filterTerms.some((term) => searchableName.includes(term))
 			const strokeOpacity = filtered ? 0.1 : 1
 			return {
-				label: key,
+				label: displayName,
 				dataKey: dataKeys[key],
 				color: colorMap[key],
 				opacity: strokeOpacity,

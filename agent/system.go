@@ -221,6 +221,9 @@ func (a *Agent) getSystemStats(cacheTimeMs uint16) system.Stats {
 	// TODO: maybe refactor to methods on systemStats
 	a.updateTemperatures(&systemStats)
 
+	// 风扇转速
+	a.updateFans(&systemStats)
+
 	// GPU data
 	if a.gpuManager != nil {
 		// reset high gpu percent
@@ -250,6 +253,28 @@ func (a *Agent) getSystemStats(cacheTimeMs uint16) system.Stats {
 			// use highest temp for dashboard temp if dashboard temp is unset
 			if a.systemInfo.DashboardTemp == 0 {
 				a.systemInfo.DashboardTemp = highestTemp
+			}
+		}
+
+		appleStats := a.gpuManager.getAppleSystemStats(cacheTimeMs)
+		if appleStats.cpuPower > 0 {
+			systemStats.CpuPower = appleStats.cpuPower
+		}
+		if appleStats.cpuTemperature > 0 {
+			if systemStats.Temperatures == nil {
+				systemStats.Temperatures = make(map[string]float64)
+			}
+			systemStats.Temperatures["macmon_cpu"] = utils.TwoDecimals(appleStats.cpuTemperature)
+			if a.sensorConfig.primarySensor == "macmon_cpu" || a.systemInfo.DashboardTemp == 0 {
+				a.systemInfo.DashboardTemp = appleStats.cpuTemperature
+			}
+		}
+		if len(appleStats.fans) > 0 {
+			if systemStats.Fans == nil {
+				systemStats.Fans = make(map[string]float64, len(appleStats.fans))
+			}
+			for name, rpm := range appleStats.fans {
+				systemStats.Fans[name] = rpm
 			}
 		}
 	}
