@@ -268,6 +268,29 @@ func (a *Agent) getSystemStats(cacheTimeMs uint16) system.Stats {
 				a.systemInfo.DashboardTemp = highestTemp
 			}
 		}
+
+		// macmon Apple system metrics (CPU power / temperature / fans)
+		appleStats := a.gpuManager.getAppleSystemStats(cacheTimeMs)
+		if appleStats.cpuPower > 0 {
+			systemStats.CpuPower = appleStats.cpuPower
+		}
+		if appleStats.cpuTemperature > 0 {
+			if systemStats.Temperatures == nil {
+				systemStats.Temperatures = make(map[string]float64)
+			}
+			systemStats.Temperatures["macmon_cpu"] = utils.TwoDecimals(appleStats.cpuTemperature)
+			if a.sensorConfig.primarySensor == "macmon_cpu" || a.systemInfo.DashboardTemp == 0 {
+				a.systemInfo.DashboardTemp = appleStats.cpuTemperature
+			}
+		}
+		if len(appleStats.fans) > 0 {
+			if systemStats.Fans == nil {
+				systemStats.Fans = make(map[string]uint16, len(appleStats.fans))
+			}
+			for name, rpm := range appleStats.fans {
+				systemStats.Fans[name] = uint16(rpm)
+			}
+		}
 	}
 
 	// update system info

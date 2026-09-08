@@ -36,7 +36,6 @@ type Agent struct {
 	netInterfaceDeltaTrackers map[uint16]*deltatracker.DeltaTracker[string, uint64] // Per-cache-time NIC delta trackers
 	dockerManager             *dockerManager                                        // Manages Docker API requests
 	sensorConfig              *SensorConfig                                         // Sensors config
-	fanConfig                 *FanConfig                                            // 风扇传感器配置
 	systemInfo                system.Info                                           // Host system info (dynamic)
 	systemDetails             system.Details                                        // Host system details (static, once-per-connection)
 	detailsDirty              bool                                                  // Whether system details have changed and need to be resent
@@ -76,7 +75,6 @@ func NewAgent(dataDir ...string) (agent *Agent, err error) {
 
 	agent.memCalc, _ = utils.GetEnv("MEM_CALC")
 	agent.sensorConfig = agent.newSensorConfig()
-	agent.fanConfig = newFanConfig()
 
 	// Parse disk usage cache duration (e.g., "15m", "1h") to avoid waking sleeping disks
 	if diskUsageCache, exists := utils.GetEnv("DISK_USAGE_CACHE"); exists {
