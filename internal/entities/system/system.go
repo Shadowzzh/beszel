@@ -15,6 +15,8 @@ type Stats struct {
 	MaxCpu         float64             `json:"cpum,omitempty" cbor:"-"`
 	CpuPower       float64             `json:"pw,omitempty" cbor:"36,keyasint,omitempty"`
 	MaxCpuPower    float64             `json:"pwm,omitempty" cbor:"-"`
+	Fans           map[string]float64  `json:"f,omitempty" cbor:"37,keyasint,omitempty"`
+	MaxFans        map[string]float64  `json:"fm,omitempty" cbor:"-"`
 	Mem            float64             `json:"m" cbor:"2,keyasint"`
 	MaxMem         float64             `json:"mm,omitempty" cbor:"-"`
 	MemUsed        float64             `json:"mu" cbor:"3,keyasint"`

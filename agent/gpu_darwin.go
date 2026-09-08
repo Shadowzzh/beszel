@@ -161,14 +161,22 @@ func (gm *GPUManager) startMacmonCollector() {
 }
 
 type macmonTemp struct {
+	CPUTempAvg float64 `json:"cpu_temp_avg"`
 	GPUTempAvg float64 `json:"gpu_temp_avg"`
 }
 
+type macmonFan struct {
+	Name string  `json:"name"`
+	RPM  float64 `json:"rpm"`
+}
+
 type macmonSample struct {
-	GPUPower    float64    `json:"gpu_power"`     // watts (macmon reports fractional values)
-	GPURAMPower float64    `json:"gpu_ram_power"` // watts
-	GPUUsage    []float64  `json:"gpu_usage"`     // [freq_mhz, usage] where usage is typically 0..1
-	Temp        macmonTemp `json:"temp"`
+	CPUPower    float64     `json:"cpu_power"`
+	GPUPower    float64     `json:"gpu_power"`     // watts (macmon reports fractional values)
+	GPURAMPower float64     `json:"gpu_ram_power"` // watts
+	GPUUsage    []float64   `json:"gpu_usage"`     // [freq_mhz, usage] where usage is typically 0..1
+	Temp        macmonTemp  `json:"temp"`
+	Fans        []macmonFan `json:"fans"`
 }
 
 func (gm *GPUManager) collectMacmonPipe() (err error) {
@@ -235,23 +243,38 @@ func (gm *GPUManager) parseMacmonLine(line []byte) bool {
 		}
 	}
 
-	// Consider the line valid if it contains at least one GPU metric.
-	if usage == 0 && sample.GPUPower == 0 && sample.Temp.GPUTempAvg == 0 {
+	if usage == 0 && sample.GPUPower == 0 && sample.Temp.GPUTempAvg == 0 && sample.CPUPower == 0 && sample.Temp.CPUTempAvg == 0 && len(sample.Fans) == 0 {
 		return false
 	}
 
 	gm.Lock()
 	defer gm.Unlock()
 
-	gpu, ok := gm.GpuDataMap[appleGPUID]
-	if !ok {
-		gpu = &system.GPUData{Name: "Apple GPU"}
-		gm.GpuDataMap[appleGPUID] = gpu
+	if usage > 0 || sample.GPUPower > 0 || sample.Temp.GPUTempAvg > 0 {
+		gpu, ok := gm.GpuDataMap[appleGPUID]
+		if !ok {
+			gpu = &system.GPUData{Name: "Apple GPU"}
+			gm.GpuDataMap[appleGPUID] = gpu
+		}
+		gpu.Temperature = sample.Temp.GPUTempAvg
+		gpu.Usage += usage
+		gpu.Power += sample.GPUPower + sample.GPURAMPower
+		gpu.Count++
 	}
-	gpu.Temperature = sample.Temp.GPUTempAvg
-	gpu.Usage += usage
-	// macmon reports power in watts; include VRAM power if present.
-	gpu.Power += sample.GPUPower + sample.GPURAMPower
-	gpu.Count++
+
+	gm.appleMetrics.cpuPower += sample.CPUPower
+	gm.appleMetrics.cpuTemperature = sample.Temp.CPUTempAvg
+	gm.appleMetrics.count++
+	if len(sample.Fans) > 0 {
+		gm.appleMetrics.fans = make(map[string]float64, len(sample.Fans))
+		for _, fan := range sample.Fans {
+			name := strings.TrimSpace(strings.ToLower(fan.Name))
+			if name == "" || fan.RPM < 0 {
+				continue
+			}
+			name = strings.ReplaceAll(name, " ", "_")
+			gm.appleMetrics.fans["macmon_"+name] = fan.RPM
+		}
+	}
 	return true
 }

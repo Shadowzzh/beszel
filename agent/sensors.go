@@ -202,32 +202,36 @@ func (a *Agent) getTempsWithTimeout(getTemps getTempsFn) ([]sensors.TemperatureS
 
 // isValidSensor checks if a sensor is valid based on the sensor name and the sensor config
 func isValidSensor(sensorName string, config *SensorConfig) bool {
+	return isValidMetric(sensorName, config.sensors, config.isBlacklist, config.hasWildcards)
+}
+
+func isValidMetric(metricName string, configured map[string]struct{}, isBlacklist, hasWildcards bool) bool {
 	// if no sensors configured, everything is valid
-	if len(config.sensors) == 0 {
+	if len(configured) == 0 {
 		return true
 	}
 
 	// Exact match - return true if whitelist, false if blacklist
-	if _, exactMatch := config.sensors[sensorName]; exactMatch {
-		return !config.isBlacklist
+	if _, exactMatch := configured[metricName]; exactMatch {
+		return !isBlacklist
 	}
 
 	// If no wildcards, return true if blacklist, false if whitelist
-	if !config.hasWildcards {
-		return config.isBlacklist
+	if !hasWildcards {
+		return isBlacklist
 	}
 
 	// Check for wildcard patterns
-	for pattern := range config.sensors {
+	for pattern := range configured {
 		if !strings.Contains(pattern, "*") {
 			continue
 		}
-		if match, _ := path.Match(pattern, sensorName); match {
-			return !config.isBlacklist
+		if match, _ := path.Match(pattern, metricName); match {
+			return !isBlacklist
 		}
 	}
 
-	return config.isBlacklist
+	return isBlacklist
 }
 
 // scaleTemperature scales temperatures in fractional values to reasonable Celsius values
