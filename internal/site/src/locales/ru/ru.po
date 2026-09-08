@@ -560,13 +560,13 @@ msgstr ""
 msgid "CPU Peak"
 msgstr "Пик CPU"
 
-#: src/lib/alerts.ts
-msgid "CPU Steal Time"
-msgstr "Недоступное время CPU (Steal)"
-||||||| parent of a7049e93 (feat: add CPU package power monitoring)
 #: src/components/routes/system/charts/cpu-charts.tsx
 msgid "CPU Power Draw"
 msgstr ""
+
+#: src/lib/alerts.ts
+msgid "CPU Steal Time"
+msgstr "Недоступное время CPU (Steal)||||||| parent of a7049e93 (feat: add CPU package power monitoring)"
 
 #: src/components/systemd-table/systemd-table.tsx
 msgid "CPU time"

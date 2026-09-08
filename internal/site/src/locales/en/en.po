@@ -546,9 +546,22 @@ msgstr "CPU Cores"
 #: src/lib/alerts.ts
 msgid "CPU I/O Wait"
 msgstr "CPU I/O Wait"
+
+#: src/components/routes/system/charts/cpu-charts.tsx
+msgid "CPU Package Power"
+msgstr "CPU Package Power"
+
+#: src/components/systemd-table/systemd-table-columns.tsx
+msgid "CPU Peak"
+msgstr "CPU Peak"
+
 #: src/components/routes/system/charts/cpu-charts.tsx
 msgid "CPU Power Draw"
 msgstr "CPU Power Draw"
+
+#: src/lib/alerts.ts
+msgid "CPU Steal Time"
+msgstr "CPU Steal Time"
 
 #: src/components/systemd-table/systemd-table.tsx
 msgid "CPU time"

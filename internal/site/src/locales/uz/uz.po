@@ -72,6 +72,10 @@ msgid "1 week"
 msgstr "1 hafta"
 
 #: src/lib/utils.ts
+msgid "10 minutes"
+msgstr ""
+
+#: src/lib/utils.ts
 msgid "12 hours"
 msgstr "12 soat"
 
@@ -87,6 +91,10 @@ msgstr "24 soat"
 #: src/lib/utils.ts
 msgid "30 days"
 msgstr "30 kun"
+
+#: src/lib/utils.ts
+msgid "30 minutes"
+msgstr ""
 
 #. Load average
 #: src/components/routes/system/charts/load-average-chart.tsx
@@ -204,6 +212,10 @@ msgstr "Mavjud"
 #: src/components/routes/system/chart-card.tsx
 msgid "Average"
 msgstr "O'rtacha"
+
+#: src/components/routes/system/charts/cpu-charts.tsx
+msgid "Average CPU package power consumption"
+msgstr ""
 
 #: src/components/routes/system/charts/cpu-charts.tsx
 msgid "Average CPU utilization of containers"
@@ -540,9 +552,17 @@ msgstr "CPU yadrolar"
 msgid "CPU I/O Wait"
 msgstr "CPU I/O kutish vaqti"
 
+#: src/components/routes/system/charts/cpu-charts.tsx
+msgid "CPU Package Power"
+msgstr ""
+
 #: src/components/systemd-table/systemd-table-columns.tsx
 msgid "CPU Peak"
 msgstr "CPU yuqori ko'rsatkichi"
+
+#: src/components/routes/system/charts/cpu-charts.tsx
+msgid "CPU Power Draw"
+msgstr ""
 
 #: src/lib/alerts.ts
 msgid "CPU Steal Time"

@@ -551,8 +551,21 @@ msgstr "Ядра ЦП"
 #: src/lib/alerts.ts
 msgid "CPU I/O Wait"
 msgstr "Час очікування введення/виведення CPU (IOWait)"
+
+#: src/components/routes/system/charts/cpu-charts.tsx
+msgid "CPU Package Power"
+msgstr ""
+
+#: src/components/systemd-table/systemd-table-columns.tsx
+msgid "CPU Peak"
+msgstr ""
+
 #: src/components/routes/system/charts/cpu-charts.tsx
 msgid "CPU Power Draw"
+msgstr ""
+
+#: src/lib/alerts.ts
+msgid "CPU Steal Time"
 msgstr ""
 
 #: src/components/systemd-table/systemd-table.tsx
