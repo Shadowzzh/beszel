@@ -32,8 +32,11 @@ const sensorDisplayNames: Record<string, string> = {
 	coretemp_core_32: "E核温度",
 	// lenovo_m750q_fan EC board sensors
 	lenovo_m750q_fan_vrm: "VRM 温度",
-	lenovo_m750q_fan_ambient: "环境温度",
 	lenovo_m750q_fan_m2: "M.2 温度",
+	lenovo_m750q_fan_pch: "PCH 温度",
+	// 注意：`lenovo_m750q_fan_ambient`（EC 0x26）实测稳定在 12-13°C，与同机
+	// 主板 24°C、SSD 27°C、VRM 33°C 矛盾，判定为不可信读数，未纳入 Agent
+	// 的 SENSORS 白名单，因此这里不提供中文显示名。
 }
 
 function getSensorDisplayName(sensorName: string) {
