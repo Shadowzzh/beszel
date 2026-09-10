@@ -26,6 +26,14 @@ const sensorDisplayNames: Record<string, string> = {
 	nvme_sensor_2: "SSD 传感器 2",
 	spd5118: "内存温度 1",
 	spd5118_11: "内存温度 2",
+	// Intel coretemp (thinkcentre/M750q)
+	coretemp_package_id_0: "CPU 总温度",
+	coretemp_core_0: "P核温度",
+	coretemp_core_32: "E核温度",
+	// lenovo_m750q_fan EC board sensors
+	lenovo_m750q_fan_vrm: "VRM 温度",
+	lenovo_m750q_fan_ambient: "环境温度",
+	lenovo_m750q_fan_m2: "M.2 温度",
 }
 
 function getSensorDisplayName(sensorName: string) {
