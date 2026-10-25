@@ -25,14 +25,18 @@ var errTemperatureFetchTimeout = errors.New("temperature collection timed out")
 type getTempsFn func(ctx context.Context) ([]sensors.TemperatureStat, error)
 
 type SensorConfig struct {
-	context        context.Context
-	sensors        map[string]struct{}
-	primarySensor  string
-	timeout        time.Duration
-	isBlacklist    bool
-	hasWildcards   bool
-	skipCollection bool
-	firstRun       bool
+	context context.Context
+	sensors map[string]struct{}
+	// temperatureOffsets applies a per-sensor correction (in Celsius) before values
+	// are stored or used for the dashboard temperature. Useful for engineering
+	// samples whose DTS calibration reads systematically low or high.
+	temperatureOffsets map[string]float64
+	primarySensor      string
+	timeout            time.Duration
+	isBlacklist        bool
+	hasWildcards       bool
+	skipCollection     bool
+	firstRun           bool
 }
 
 func (a *Agent) newSensorConfig() *SensorConfig {
@@ -41,8 +45,11 @@ func (a *Agent) newSensorConfig() *SensorConfig {
 	sensorsEnvVal, sensorsSet := utils.GetEnv("SENSORS")
 	skipCollection := sensorsSet && sensorsEnvVal == ""
 	sensorsTimeout, _ := utils.GetEnv("SENSORS_TIMEOUT")
+	sensorOffsets, _ := utils.GetEnv("SENSOR_OFFSETS")
 
-	return a.newSensorConfigWithEnv(primarySensor, sysSensors, sensorsEnvVal, sensorsTimeout, skipCollection)
+	config := a.newSensorConfigWithEnv(primarySensor, sysSensors, sensorsEnvVal, sensorsTimeout, skipCollection)
+	config.temperatureOffsets = parseSensorOffsets(sensorOffsets)
+	return config
 }
 
 // newSensorConfigWithEnv creates a SensorConfig with the provided environment variables
@@ -58,12 +65,13 @@ func (a *Agent) newSensorConfigWithEnv(primarySensor, sysSensors, sensorsEnvVal,
 	}
 
 	config := &SensorConfig{
-		context:        context.Background(),
-		primarySensor:  primarySensor,
-		timeout:        timeout,
-		skipCollection: skipCollection,
-		firstRun:       true,
-		sensors:        make(map[string]struct{}),
+		context:            context.Background(),
+		primarySensor:      primarySensor,
+		timeout:            timeout,
+		skipCollection:     skipCollection,
+		firstRun:           true,
+		sensors:            make(map[string]struct{}),
+		temperatureOffsets: make(map[string]float64),
 	}
 
 	// Set sensors context (allows overriding sys location for sensors)
@@ -93,7 +101,31 @@ func (a *Agent) newSensorConfigWithEnv(primarySensor, sysSensors, sensorsEnvVal,
 	return config
 }
 
-// updateTemperatures updates the agent with the latest sensor temperatures
+// parseSensorOffsets parses a SENSOR_OFFSETS value such as
+// "coretemp_package_id_0=7.5,coretemp_core_0=7.5" into a name -> delta map.
+// Invalid entries are logged and skipped so a typo cannot stop temperature collection.
+func parseSensorOffsets(raw string) map[string]float64 {
+	offsets := make(map[string]float64)
+	for entry := range strings.SplitSeq(raw, ",") {
+		entry = strings.TrimSpace(entry)
+		if entry == "" {
+			continue
+		}
+		name, value, ok := strings.Cut(entry, "=")
+		if !ok {
+			slog.Warn("Invalid SENSOR_OFFSETS entry (missing '=')", "entry", entry)
+			continue
+		}
+		name = strings.TrimSpace(name)
+		offset, err := strconv.ParseFloat(strings.TrimSpace(value), 64)
+		if name == "" || err != nil {
+			slog.Warn("Invalid SENSOR_OFFSETS entry", "entry", entry, "err", err)
+			continue
+		}
+		offsets[name] = offset
+	}
+	return offsets
+}
 func (a *Agent) updateTemperatures(systemStats *system.Stats) {
 	// skip if sensors whitelist is set to empty string
 	if a.sensorConfig.skipCollection {
@@ -148,6 +180,10 @@ func (a *Agent) updateTemperatures(systemStats *system.Stats) {
 		// skip if not in whitelist or blacklist
 		if !isValidSensor(sensorName, a.sensorConfig) {
 			continue
+		}
+		// apply per-sensor calibration offset (e.g. engineering sample DTS bias)
+		if offset, ok := a.sensorConfig.temperatureOffsets[sensorName]; ok {
+			sensor.Temperature += offset
 		}
 		// set dashboard temperature
 		switch a.sensorConfig.primarySensor {

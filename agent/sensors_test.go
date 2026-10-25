@@ -620,3 +620,14 @@ func TestUpdateTemperaturesSkipsOnTimeout(t *testing.T) {
 	assert.Equal(t, 0.0, agent.systemInfo.DashboardTemp)
 	assert.Equal(t, map[string]float64{}, stats.Temperatures)
 }
+
+func TestParseSensorOffsets(t *testing.T) {
+	got := parseSensorOffsets(" coretemp_package_id_0 = 7.5 , nct6687_peci_0.0=-1.5, broken, =3, x=abc, y= ")
+	want := map[string]float64{
+		"coretemp_package_id_0": 7.5,
+		"nct6687_peci_0.0":      -1.5,
+	}
+	assert.Equal(t, want, got)
+
+	assert.Empty(t, parseSensorOffsets(""))
+}
