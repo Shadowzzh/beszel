@@ -21,22 +21,35 @@ const sensorDisplayNames: Record<string, string> = {
 	k10temp_tctl: "CPU 温度",
 	macmon_cpu: "CPU 温度",
 	"r8169_0_400:00": "有线网卡温度",
+	"r8169_0_300:00": "有线网卡温度",
 	nvme_composite: "SSD 综合温度",
 	nvme_sensor_1: "SSD 传感器 1",
 	nvme_sensor_2: "SSD 传感器 2",
 	spd5118: "内存温度 1",
 	spd5118_11: "内存温度 2",
-	// Intel coretemp (thinkcentre/M750q)
-	coretemp_package_id_0: "CPU 总温度",
-	coretemp_core_0: "P核温度",
-	coretemp_core_32: "E核温度",
-	// lenovo_m750q_fan EC board sensors
-	lenovo_m750q_fan_vrm: "VRM 温度",
-	lenovo_m750q_fan_m2: "M.2 温度",
-	lenovo_m750q_fan_pch: "PCH 温度",
-	// 注意：`lenovo_m750q_fan_ambient`（EC 0x26）实测稳定在 12-13°C，与同机
-	// 主板 24°C、SSD 27°C、VRM 33°C 矛盾，判定为不可信读数，未纳入 Agent
-	// 的 SENSORS 白名单，因此这里不提供中文显示名。
+	// Intel coretemp (b660m)
+	coretemp_package_id_0: "CPU 总温度（核心）",
+	coretemp_core_0: "CPU 大核温度",
+	coretemp_core_32: "CPU 小核温度",
+	// Nuvoton NCT6687D（微星 B660M 迫击炮，nct6683 驱动）
+	"nct6687_peci_0.0": "CPU 温度（主板侧）",
+	"nct6687_diode_0_(curr)": "主板温度",
+	nct6687_thermistor_15: "主板供电（VRM）温度",
+	nct6687_pch_chip: "芯片组（PCH）温度",
+	nct6687_thermistor_16: "CPU 底座温度",
+	nct6687_thermistor_0: "显卡插槽附近温度",
+	nct6687_thermistor_1: "M.2 硬盘位温度",
+	// 风扇：fan1 接 CPU_FAN1，其余接口未接
+	nct6687_fan1: "CPU 风扇转速",
+	nct6687_fan2: "水泵接口转速（未接）",
+	nct6687_fan3: "机箱风扇 1（未接）",
+	nct6687_fan4: "机箱风扇 2（未接）",
+	nct6687_fan5: "机箱风扇 3（未接）",
+	nct6687_fan6: "机箱风扇 4（未接）",
+	nct6687_fan7: "备用风扇接口 1（未接）",
+	nct6687_fan8: "备用风扇接口 2（未接）",
+	nct6687_fan9: "备用风扇接口 3（未接）",
+	nct6687_fan10: "备用风扇接口 4（未接）",
 }
 
 function getSensorDisplayName(sensorName: string) {
@@ -339,7 +352,7 @@ export function FanChart({ chartData, grid, dataEmpty }: { chartData: ChartData;
 			const filtered = filterTerms.length > 0 && !filterTerms.some((term) => key.toLowerCase().includes(term))
 			const strokeOpacity = filtered ? 0.1 : 1
 			return {
-				label: key,
+				label: getSensorDisplayName(key),
 				dataKey: dataKeys[key],
 				color: colorMap[key],
 				strokeOpacity,
